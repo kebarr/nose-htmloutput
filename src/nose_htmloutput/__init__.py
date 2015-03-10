@@ -48,6 +48,14 @@ def nice_classname(obj):
     else:
         return cls_name
 
+def prettify_name(name):
+    try:
+        split_1 = name.split('(')[1]
+        split_2 = split_1.split(',')[0]
+        return split_2
+    except IndexError:
+        return name
+
 
 def exc_message(exc_info):
     """Return the exception's message."""
@@ -108,6 +116,7 @@ class HtmlOutput(Plugin):
             self.stats = {'errors': 0, 'failures': 0, 'passes': 0, 'skipped': 0}
             self.report_data = defaultdict(Group)
             self.report_file = codecs.open(options.html_file, 'w', self.encoding, 'replace')
+            self.jinja.filters['prettify_name'] = prettify_name
 
     def report(self, stream):
         """Writes an Xunit-formatted XML file
